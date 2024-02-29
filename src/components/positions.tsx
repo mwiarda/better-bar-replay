@@ -13,15 +13,16 @@ const PositionsComponent = (props: Props) => {
 
   const data = filteredPositions.map((p) => ({
     Id: p.id,
-    Type: p.type,
+    Type: p.type == 'b' ? "Long" : "Short",
     Size: p.size,
     Open: p.open,
     [props.viewMode ? 'Close' : 'Current']: p.current,
-    "P/L": p.pl
+    "P/L": p.pl,
+    "P/L %": p.plPercent
   }))
 
   return (
-    <Table columns={["Id", "Type", "Size", "Open", props.viewMode ? 'Close' : 'Current', "P/L"]} data={data} />
+    <Table columns={["Id", "Type", "Size", "Open", props.viewMode ? 'Close' : 'Current', "P/L", "P/L %"]} data={data} />
   )
 }
 

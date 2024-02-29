@@ -28,5 +28,6 @@ export const symbol = pod<Symbol>({
     state.price = price
     state.buy = (parseFloat(price) + spread).toFixed(decimalLength)
     state.sell = (parseFloat(price) - spread).toFixed(decimalLength)
+    console.log(spread, state.spread, state.price, state.buy, state.sell)
   }
 })

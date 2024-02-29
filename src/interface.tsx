@@ -23,7 +23,7 @@ const Interface = () => {
 					setWaiting(false)
 				}
 			})
-		}, 1000)
+		}, 250)
 
 		return () => clearInterval(interval)
 	}, [waiting])

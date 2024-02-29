@@ -12,9 +12,10 @@ const AccountComponent = (props: Props) => {
     <Table
       data={[
         {
-          Balance: props.accountState.balance,
-          Equity: props.accountState.equity,
-          "P/L": props.accountState.pl
+          Cash: props.accountState.cash,
+          Equities: props.accountState.equity,
+          "P/L": props.accountState.pl,
+          "P/L %": props.accountState.plPercent
         }
       ]}
     />

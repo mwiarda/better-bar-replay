@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { account } from '../reducers/account'
+import { account, AccountState } from '../reducers/account'
 import { symbol, Symbol } from '../reducers/symbol'
 import { positions } from '../reducers/positions'
 import { Text, Box } from 'ink'
@@ -8,6 +8,7 @@ import TextInput from 'ink-text-input'
 import { nextTicker } from '../browser'
 
 interface Props {
+  accountState: AccountState
   symbol: Symbol
   setViewMode: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -25,21 +26,25 @@ const Trade = (props: Props) => {
     if (!loading) {
       const [command, ...args] = query.split(" ")
   
-      if (command === "buy" || command === "sell") {
+      if (command === "b" || command === "s") {
         if (props.symbol.price) {
-          const size = parseFloat(args[0].replace('k', '000'))
+          let size = 1
+          if (args.length == 0){
+            size = parseFloat(props.accountState.balance.substring(1)) / parseFloat(props.symbol.price)
+            size = Math.floor(size)
+          }
+          else
+          {
+            size = parseFloat(args[0].replace('k', '000'))
+          }
           if (!isNaN(size)) {
-            positions.addPosition(command === "buy" ? "Buy" : "Sell", size, props.symbol)
+            positions.addPosition(command === "b" ? "b" : "s", size, props.symbol)
           }
         }
         resetQuery()
       }
-      else if (command === "close") {
-        if (args[0] === "all") {
-          positions.closeAll()
-        } else {
-          positions.closePosition(!args[0] ? undefined : parseInt(args[0]))
-        }
+      else if (command === "c") {
+        positions.closeAll()
         resetQuery()
       }
       else if (command === "reset") {
@@ -50,6 +55,9 @@ const Trade = (props: Props) => {
       else if (command === "view") {
         props.setViewMode(mode => !mode)
         resetQuery()
+      }
+      else if (command === "exit" || command == "quit"){
+        process.exit(0)
       }
       else if (command === "") {
         setLoading(true)
@@ -76,7 +84,8 @@ const Trade = (props: Props) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    symbol: symbol.mapState(state)
+    symbol: symbol.mapState(state),
+    accountState: account.mapState(state)
   }
 }
 
